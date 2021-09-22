@@ -1,9 +1,9 @@
-size(399,326);
+size(500,400);
 
-color red = color(255, 0, 0);
+color red = color(255, 0, 50);
 color white = color(255, 255, 255);
 
-int x = 100, y = 100;
+int x = 100, y = 150;
 
 int r1 = 150;
 int r2 = 100;
@@ -17,7 +17,7 @@ fill(red);
 circle(x,y,r3);
 
 x += 150;
-y += 175;
+y += 150;
 
 fill(red);
 circle(x,y,r1);
@@ -27,7 +27,7 @@ fill(red);
 circle(x,y,r3);
 
 x += 150;
-y -= 175;
+y -= 150;
 
 fill(red);
 circle(x,y,r1);
