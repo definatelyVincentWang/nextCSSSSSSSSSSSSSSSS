@@ -1,41 +1,18 @@
 /*
 
-// declaration
-int i;
+byte = 8 bits
 
-// initialization
-i = 69696969;
+int = 4 bytes
 
-// both
-int q = 96969;
+long = 8 bytes
 
-// declare two variables
-int l, s;
+float = idk bytes
 
-// delcare and init multiple variables
-int a = 50, b, c = 100;
+double = idk bytes (much more precise than float so 28 decimal places or something)
+
+boolean = 1 byte
+
+char = natively unicode (any character from any alphabet)
+
+String = double quotes
 */
-
-size(500, 400);
-
-int x = 100, y = 150;
-
-// color is a datatype and also the name of a function that makes a color.
-
-// ways to call function:
-//   color(int grayscale); 0 - 255
-//   color(int r, int g, int b); 0 - 255
-//   color(int r, int g, int b, int transparency); 0-255 for first 3, transparency = 0, then color doesnt show up   
-//                                                                    transparency = 255, color overrides everything
-color c;
-c = color(50, 200, 50);
-fill(c);
-
-rect(x,y,75,100);
-
-x = x + 50;
-y = y - 100;
-
-c = color(255, 255, 20);
-fill(c);
-rect(x,y,99, 99);
