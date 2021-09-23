@@ -7,15 +7,15 @@
 size(700, 500);
 
 // set max of length and width
-int maxX = 150;
-int maxY = 75;
+int maxX = 151;
+int maxY = 76;
 
 // set max possible x and y coordinates
-int sizeX = 700;
-int sizeY = 500;
+int sizeX = 701;
+int sizeY = 501;
 
 // max possible color value
-int maxC = 255;
+int maxC = 256;
 
 // create a rectangle in a random location of random size and color i times
 for (int i = 0; i < 400; i++) {
