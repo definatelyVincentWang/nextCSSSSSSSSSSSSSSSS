@@ -1,6 +1,4 @@
 public String frontBack(String str) {
-  String newstr = "";
-  for (int i = str.length - 1; i >= 0; i++)
-    newstr += str.charAt(i);
-  return newstr;
+  if (str.length() <= 1) return str;
+  return str.charAt(str.length() - 1) + str.substring(1, str.length() - 1) + str.charAt(0);
 }
