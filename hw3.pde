@@ -5,8 +5,9 @@ void setup() {
 void draw() {
   println(CoolEuler(100) - PI/6.);
   // -> should print 1.1113852
-  println(Harmony(20.));
-  // -> should print 272400582
+  println(Harmony(12.));
+  // -> should print 91329
+  // slight problem that I do not understand. How do you deal with numbers as large as 100. When doing 20, you must use double, but I believe at 100 it will become too precise even for double.
   AllOfThem();
   /* -> Should print:
   2
@@ -49,7 +50,7 @@ float CoolEuler(int n) {
 
 int Harmony(float sum) {
   // create a variable to save the sum of all 1/i for all i [1,infiniti)
-  double res = 0;
+  float res = 0;
   // create a variable to save the current denominator
   int denominator = 1;
   while (res < sum) {
