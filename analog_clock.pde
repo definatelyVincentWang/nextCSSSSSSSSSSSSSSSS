@@ -6,7 +6,7 @@ void setup() {
 void draw() {
   // outline da rolex
   background(119,221,119);
-  fill(255,215,0);
+  fill(255,215,0); 
   stroke(0,0,0);
   
   fill(192,192,192);
@@ -26,10 +26,13 @@ void draw() {
   stroke(0);
   
   // second
-  line(200,200,200 + 140 * cos((2 * PI / 60) * second()), 200 + 140 * sin((2 * PI / 60) * second()));
+  float radiansS = (2 * PI / 60) * second() - PI / 2;
+  line(200,200,200 + 140 * cos(radiansS), 200 + 140 * sin(radiansS));
   // minute
-  line(200,200,200 + 120 * cos((2*PI / (60 * 60)) * minute()),200 + 120 * sin((2*PI / (60 * 60)) * minute()));
+  float radiansM = (2*PI / (60 * 60)) * minute() - PI/2;
+  line(200,200,200 + 120 * cos(radiansM),200 + 120 * sin(radiansM));
   // hour
-  line(200,200,200 + 100*cos((2*PI / (60 * 60 * 12)) * hour()),200 + 100*sin((2*PI / (60 * 60 * 12)) * hour()));
+  float radiansH = (2*PI / (60 * 60 * 12)) * hour() - PI/2;
+  line(200,200,200 + 100*cos(radiansH),200 + 100*sin(radiansH));
   delay(1000);
 }
