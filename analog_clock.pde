@@ -4,23 +4,40 @@ void setup() {
 }
 
 void draw() {
-  // outline da rolex
   background(119,221,119);
+  // outline da rolex
   fill(255,215,0); 
   stroke(0,0,0);
   fill(192,192,192);
   rect(150 * cos(4 * PI/3) + 200, 150 * sin(4 * PI/3)+ 200, (150 * cos(-PI/3) + 200)-(150 * cos(4 * PI/3) + 200), -100);
   rect(150 * cos(2*PI/3) + 200,150 * sin(2*PI/3)+ 200,(150 * cos(PI/3) + 200) - (150 * cos(2*PI/3) + 200), 500);
-  
   strokeWeight(50);
   stroke(255,215,0);
   line(150 * cos(-PI/2) + 200, 150 * sin(-PI/2)+ 200, 150 * cos(-PI/2)+ 200, 150 * sin(-PI/2));
   line(150 * cos(PI/2) + 200, 150 * sin(PI/2)+ 200, 150 * cos(PI/2)+ 200, 150 * sin(PI/2) + 400);
+  // make the watch case
   strokeWeight(10);
   stroke(192,192,192);
   fill(255,215,0);
   circle(200,200,300);
   
+  // make the time tuner
+  rect(150*cos(0)+2.5, 150 * sin(0), 10,10);
+  
+  // make a circle to say pm or am
+  strokeWeight(1);
+  stroke(255,255,255);
+  fill(255,255,255);
+  circle(200,300, 30);
+  // draw arc but idk how 2
+  stroke(0,0,0);
+  fill(0,0,0);
+  arc(200,300,30,30,0,PI);
+  stroke(255,215,0);
+  float timeOfDay = map(hour(), 0, 23, 0, 2*PI);
+  line(200,300, 200 + 15 * cos(timeOfDay), 300 + 15 * sin(timeOfDay));
+  
+  // make the ticks
   strokeWeight(1);
   stroke(0,0,0);
   for(int i = 0; i < 12; i++) {
