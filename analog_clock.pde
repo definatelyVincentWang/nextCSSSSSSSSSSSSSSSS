@@ -14,6 +14,7 @@ void draw() {
   strokeWeight(50);
   
   /*
+  // multi color wrist band?
   stroke(255,215,0);
   line(150 * cos(-PI/2) + 200, 150 * sin(-PI/2)+ 200, 150 * cos(-PI/2)+ 200, 150 * sin(-PI/2));
   line(150 * cos(PI/2) + 200, 150 * sin(PI/2)+ 200, 150 * cos(PI/2)+ 200, 150 * sin(PI/2) + 400);
@@ -25,29 +26,28 @@ void draw() {
   fill(54,69,79);
   circle(200,200,300);
   
-  // make the time tuner
-  //rect(150*cos(0)+2.5, 150 * sin(0), 10,10);
-  
   // make a circle to say pm or am
-  int timeX = 160;
-  int timeY = 250;
-  int D = 50;
+  int timeX = 185;
+  int timeY = 260;
+  int D = 60;
   strokeWeight(1);
   stroke(200,156,118,255);
-  fill(255,255,255);
+  fill(0,0,0);
   circle(timeX,timeY, D);
   // draw arc but idk how 2
   stroke(200,156,118,255);
-  fill(0,0,0);
+  fill(255,255,255);
   arc(timeX,timeY,D,D,0,PI);
   stroke(200,156,118,255);
-  float timeOfDay = map(hour(), 0, 23, 0, 2*PI);
+  float timeOfDay = map(hour(), 0, 24, 0, 2 * PI);
   line(timeX,timeY, timeX + D/2 * cos(timeOfDay), timeY + D/2 * sin(timeOfDay));
+  
+  fill(0,0,0);
   
   // make da logo
   int monthX = 200;
   int monthY = 120;
-  D = 13;
+  D = 20;
   circle(monthX,monthY, D);
   for(int i = 0; i < 12; i++) {
     float theta = PI/6 * i;
@@ -61,9 +61,8 @@ void draw() {
   }
   
   // make a circle say month
-  
   monthX = 150;
-  monthY = 170;
+  monthY = 180;
   D = 60;
   circle(monthX,monthY, D);
   for(int i = 0; i < 12; i++) {
@@ -76,12 +75,11 @@ void draw() {
     float y = monthY + (D/2 - 10 ) * sin(theta);
     line(oldX, oldY, x, y);
   }
-  float theta = map(month(), 1.0,12.0, -PI/2, 3 * PI / 2);
+  float theta = map(month(), 0,12, -PI/2, 3 * PI / 2);
   line(monthX, monthY, monthX + D/2 * cos(theta), monthY + D/2 * sin(theta));
   
   // make a circle say dates
-  
-  int dayX = 250;
+  int dayX = 265;
   int dayY = 200;
   D = 80;
   circle(dayX,dayY,D);
@@ -95,7 +93,7 @@ void draw() {
     line(oldX, oldY, x,y);
   }
   
-  theta = map(day(), 1,31, -PI/2, 3 * PI / 2);
+  theta = map(day(), 0,32, -PI/2, 3 * PI / 2);
   line(dayX, dayY, dayX + D/2 * cos(theta), dayY + D/2 * sin(theta));
   
   // make the ticks
@@ -107,8 +105,8 @@ void draw() {
       stroke(200,156,118,255);
       strokeWeight(5);
     }
-    float oldX = 200 + 100 * cos(theta);
-    float oldY = 200 + 100 * sin(theta);
+    float oldX = 200 + 120 * cos(theta);
+    float oldY = 200 + 120 * sin(theta);
     
     float x = 200 + 140 * cos(theta);
     float y = 200 + 140 * sin(theta);
@@ -116,10 +114,42 @@ void draw() {
     stroke(40);
     strokeWeight(1.5);
   }
+  /*
+  // make da sun
+  noStroke();
+  fill(249,215,29);
+  circle(200,200,35);
   
-  stroke(200,156,118,255);
+  // position of earth on the ecliptic
+  int orbitX = 200;
+  int orbitY = 200;
+  D = 215;
+  noFill();
+  stroke(135, 206, 235);
+  circle(orbitX, orbitY, D);
+  theta = map(month(), 0,12, -PI/2, 3 * PI/2) + map(day(), 0, 32, 0, PI/6);
+  float earthX = orbitX + D / 2 * cos(theta);
+  float earthY = orbitY + D / 2 * sin(theta);
+  D = 25;
+  fill(34,59,5);
+  noStroke();
+  circle(earthX, earthY, D);
   
+  // moon orbit
+  noFill();
+  stroke(253,253,150);
+  D = 40;
+  circle(earthX, earthY, D);
+  theta = map(hour(), 0, 24, - PI / 2, 3 * PI / 2) + map(minute(), 0, 60, 0, PI / 12);
+  float moonX = earthX + D / 2 * cos(theta);
+  float moonY = earthY + D / 2 * sin(theta);
+  D = 10;
+  fill(49, 48, 46);
+  noStroke();
+  circle(moonX, moonY, D);
+  */
   // second
+  stroke(200,156,118,255);
   float radiansS = (2*PI/60) * second() - PI / 2;
   strokeWeight(1);
   line(200,200,200 + 140 * cos(radiansS), 200 + 140 * sin(radiansS));
