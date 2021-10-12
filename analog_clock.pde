@@ -1,6 +1,10 @@
+PFont textfont;
+
 void setup() {
   size(400,400);
   background(255,255,255);
+  textfont = createFont(PFont.list()[10], 15);
+  textFont(textfont);
 }
 
 void draw() {
@@ -60,6 +64,8 @@ void draw() {
     line(oldX, oldY, x, y);
   }
   
+  text("Sputnik", 176, 150);
+  
   // make a circle say month
   monthX = 150;
   monthY = 180;
@@ -114,7 +120,7 @@ void draw() {
     stroke(40);
     strokeWeight(1.5);
   }
-  /*
+  
   // make da sun
   noStroke();
   fill(249,215,29);
@@ -147,7 +153,7 @@ void draw() {
   fill(49, 48, 46);
   noStroke();
   circle(moonX, moonY, D);
-  */
+  
   // second
   stroke(200,156,118,255);
   float radiansS = (2*PI/60) * second() - PI / 2;
