@@ -3,11 +3,13 @@ PFont textfont;
 void setup() {
   size(400,400);
   background(255,255,255);
-  textfont = createFont(PFont.list()[10], 15);
-  textFont(textfont);
+    textAlign(CENTER);
 }
 
 void draw() {
+  textfont = createFont(PFont.list()[10], 10);
+  textFont(textfont);
+  
   background(255,255,255);
   // outline da rolex
   fill(255,215,0); 
@@ -43,10 +45,12 @@ void draw() {
   fill(255,255,255);
   arc(timeX,timeY,D,D,0,PI);
   stroke(200,156,118,255);
+  strokeWeight(5);
   float timeOfDay = map(hour(), 0, 24, 0, 2 * PI);
   line(timeX,timeY, timeX + D/2 * cos(timeOfDay), timeY + D/2 * sin(timeOfDay));
   
   fill(0,0,0);
+  strokeWeight(1);
   
   // make da logo
   int monthX = 200;
@@ -63,8 +67,9 @@ void draw() {
     float y = monthY + D/2 - 10 * sin(theta);
     line(oldX, oldY, x, y);
   }
-  
-  text("Sputnik", 176, 150);
+  fill(200,156,118,255);
+  text("Sputnik", 200, 150);
+  fill(0);
   
   // make a circle say month
   monthX = 150;
@@ -84,9 +89,10 @@ void draw() {
   float theta = map(month(), 0,12, -PI/2, 3 * PI / 2);
   line(monthX, monthY, monthX + D/2 * cos(theta), monthY + D/2 * sin(theta));
   
+  
   // make a circle say dates
-  int dayX = 265;
-  int dayY = 200;
+  int dayX = 260;
+  int dayY = 180;
   D = 80;
   circle(dayX,dayY,D);
   for(int i = 0; i < 32; i++) {
@@ -98,11 +104,22 @@ void draw() {
     float y = dayY + (D/2 - 10 ) * sin(theta);
     line(oldX, oldY, x,y);
   }
-  
   theta = map(day(), 0,32, -PI/2, 3 * PI / 2);
   line(dayX, dayY, dayX + D/2 * cos(theta), dayY + D/2 * sin(theta));
   
+  // make the analog date thing
+  fill(0);
+  noStroke();
+  square(247,230,30);
+  fill(255,255,255);
+  textfont = createFont(PFont.list()[30], 20);
+  textFont(textfont);
+  text(day(), 260, 250);
+  fill(0);
+  
   // make the ticks
+  textfont = createFont(PFont.list()[30], 15);
+  textFont(textfont);
   strokeWeight(1.5);
   stroke(40);
   for(int i = 0; i < 12; i++) {
@@ -111,13 +128,18 @@ void draw() {
       stroke(200,156,118,255);
       strokeWeight(5);
     }
-    float oldX = 200 + 120 * cos(theta);
-    float oldY = 200 + 120 * sin(theta);
+    float oldX = 200 + 130 * cos(theta);
+    float oldY = 200 + 130 * sin(theta);
     
     float x = 200 + 140 * cos(theta);
     float y = 200 + 140 * sin(theta);
     line(oldX, oldY, x,y);
-    stroke(40);
+    theta -= PI / 2 - PI / 6;
+    
+    float letterx = 200 + 120 * cos(theta);
+    float lettery = 200 + 120 * sin(theta) + 5;
+    theta += PI / 2 + PI / 6;
+    text(i + 1, letterx, lettery);
     strokeWeight(1.5);
   }
   
