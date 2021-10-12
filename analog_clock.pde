@@ -95,6 +95,8 @@ void draw() {
   int dayY = 180;
   D = 80;
   circle(dayX,dayY,D);
+  textfont = createFont(PFont.list()[30], 5);
+  textFont(textfont);
   for(int i = 0; i < 32; i++) {
     theta = PI/16 * i;
     float oldX = dayX + D/2 * cos(theta);
@@ -102,7 +104,18 @@ void draw() {
     
     float x = dayX + (D/2 - 10) * cos(theta);
     float y = dayY + (D/2 - 10 ) * sin(theta);
+    
+    
     line(oldX, oldY, x,y);
+    
+    if (i + 1 % 3 == 0) {
+      theta -= PI / 2 - PI / 16;
+    
+      float letterx = dayX + (D / 2 - 15) * cos(theta);
+      float lettery = dayY + (D / 2 - 15) * sin(theta);
+      theta += PI / 2 + PI / 16;
+      text(i + 1, letterx, lettery);
+    }
   }
   theta = map(day(), 0,32, -PI/2, 3 * PI / 2);
   line(dayX, dayY, dayX + D/2 * cos(theta), dayY + D/2 * sin(theta));
