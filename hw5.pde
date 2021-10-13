@@ -1,16 +1,22 @@
-size(400,600);
-int xValue = 400;
-int yValue = 600;
+int xValue;
+int yValue;
 
 void setup() {
+  size(600,400);
+  strokeWeight(2);
+  fill(255,255,255);
+  xValue = 600;
+  yValue = 400;
   Gid(5,6);
+  println(Nest(3));
 }
 
 void Gid(int columns, int rows) {
-  for(int x = 0; x <= xValue; x += xValue / columns) {
-    for (y = 0; y <= yValue; y += xValue / rows) {
-      rect(x,y, xValue / columns, yValue / rows);
-      circle(x + xValue / columns / 2, y + yValue / rows / 2, min(xValue, yValue));
+  for(float x = 0; x <= xValue; x += (float)xValue / columns) {
+    for (float y = 0; y <= yValue; y += (float)yValue / rows) {
+      line(x,0,x, yValue);
+      line(0,y,xValue,y);
+      circle(x + xValue / columns / 2, y + yValue / rows / 2, min(xValue / columns / 3 * 2, yValue / rows / 3 * 2));
     }
   }
 }
@@ -26,4 +32,3 @@ int Nest(int n) {
   }
   return res;
 }
-
