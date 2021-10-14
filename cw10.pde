@@ -1,36 +1,16 @@
-class pain {
-  int painLevel;
-  public pain(int painLevel) {
-    this.painLevel = painLevel;
-  }
-  void lifePain() {
-    println("Life is pain");
-  }
-  void setPain(int newPain) {
-    painLevel = newPain;
-  }
-  int getPain() {
-    return painLevel;
-  }
-  boolean isVeryPain() {
-    return painLevel > 10000;
-  }
-  boolean isDead() {
-   return painLevel > Integer.MAX_VALUE; // never possible so never dead :(
-  }
-}
-
 void setup() {
-  pain PAIN = new pain(10000);
-  PAIN.lifePain();
-  PAIN.setPain(Integer.MAX_VALUE);
-  println("MY PAIN LEVEL IS " + PAIN.getPain());
-  
   println(isPrime(23));
   
   println(checkPrimes(100)[23] == 0);
   int n = 10000;
-  int[] primes = checkPrimes(sqrt(n));
+  int[] sift = checkPrimes((int)sqrt(n) + 1);
+  ArrayList<Integer> primes = new ArrayList<Integer>();
+  for (int i = 0; i < sift.length; i++) {
+    if (sift[i] == 0) {
+      primes.add(i);
+    }
+  }
+  checkPrimes(0,500,primes);
   // new prime function to divide by all primes
 }
 
@@ -47,6 +27,22 @@ int[] checkPrimes(int lim) {
     }
   }
   return primes;
+}
+
+void checkPrimes(int min, int max, ArrayList<Integer> sift) {
+  for (; min <= max; min++) {
+    boolean isPrime = true;
+    for (int check : sift) {
+      if (min % check == 0) {
+        isPrime = false;
+        break;
+      }
+    }
+    if (isPrime) {
+      println(min);
+    }
+    
+  }
 }
 
 boolean isPrime(int n) {
