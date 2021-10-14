@@ -8,7 +8,17 @@ void setup() {
   xValue = 600;
   yValue = 400;
   Gid(5,6);
+  
+  println(Nest(0));
+  // -> returns 0
+  println(Nest(1));
+  // -> returns 1
+  println(Nest(2));
+  // -> returns 4
   println(Nest(3));
+  // -> returns 10
+  println(Nest(4));
+  // -> returns 20
 }
 
 void Gid(int columns, int rows) {
