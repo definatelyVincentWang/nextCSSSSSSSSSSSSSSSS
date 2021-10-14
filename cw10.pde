@@ -29,6 +29,9 @@ void setup() {
   println(isPrime(23));
   
   println(checkPrimes(100)[23] == 0);
+  int n = 10000;
+  int[] primes = checkPrimes(sqrt(n));
+  // new prime function to divide by all primes
 }
 
 int[] checkPrimes(int lim) {
