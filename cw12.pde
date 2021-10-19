@@ -1,27 +1,28 @@
-int x;
-int y;
+float x,y;
+float velx,vely;
 int radius;
-float angle;
 
 void setup() {
   size(400,400);
   x = 200;
   y = 200;
+  float angle = random(0,2 * PI);
+  velx = 5 * cos(angle);
+  vely = 5 * sin(angle);
   frameRate(120);
   radius = 50;
-  angle = random(0, 360);
   background(0);
   frameRate(60);
 }
 void draw() {
   background(0);
-  x += 2 * cos(radians(angle));
-  y += 2 * sin(radians(angle));
+  x += velx;
+  y += vely;
   if (x - radius <= 0 || x + radius >= width) {
-    angle = 180 - angle;
+    velx = -velx;
   }
   if (y - radius <= 0 || y + radius >= height) {
-    angle =  -angle;
+    vely = -vely;
   }
   circle(x,y,radius*2);
 }
