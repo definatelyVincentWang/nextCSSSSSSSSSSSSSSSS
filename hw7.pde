@@ -57,3 +57,43 @@ void draw() {
   recorded++;
 // your excellent code here
 }
+
+import java.util.Scanner;
+
+class account {
+  private String name;
+  private String SSN;
+  private float balance;
+    
+  public account(String name, String SSN, float balance) {
+    this.name = name;
+    this.SSN = SSN;
+    this.balance = balance;
+  }
+  
+  public float getBalance() {
+    return balance;
+  }
+  
+  public void depositMoneys(float moneys) {
+    balance += moneys;
+  }
+  
+  public void withdrawMoneys(float moneys) {
+    
+    balance -= moneys;
+  }
+  private checkIdentification() {
+    Scanner scan = new Scanner(System.in);
+    println("SSN: ");
+    String input = scan.nextLine();
+  }
+  
+  private String decrypt(String SSN, char key) {
+    String res = "";
+    for (int i = 0; i < SSN.length(); i++) {
+      res += SSN.charAt(i) ^ key;
+    }
+    return res;
+  }
+}
