@@ -42,10 +42,24 @@ void draw() {
   line(bx, by - BallRadius, bx, by + BallRadius);
   if (bx <= BallRadius || bx >= (width-BallRadius)) {
       bxvel = 0;
+  }
+  if (by <= BallRadius || by >= (height-BallRadius)) {
+    byvel = 0;
+  }
+  if (gameFinished()) {
+    setup();
+  }
+  
+  
+}
+
+boolean gameFinished() {
+  for (Target i : targets) {
+    if (i.state != 2) {
+      return false;
     }
-    if (by <= BallRadius || by >= (height-BallRadius)) {
-      byvel = 0;
-    }
+  }
+  return true;
 }
 
 /* ===================
@@ -103,11 +117,11 @@ class Target {
     } else if (state == 1) {
       fill(c);
       circle(cx,cy,TargetRadius * 2);
-      float newMillis = millis() / 2;
-      if (millis() - startedExploding == 255) {
+      float newMillis = (millis() - startedExploding) / 3;
+      if (newMillis >= 255) {
         state = 2;
       }
-      c = color(255,0,0,255 - millis() + startedExploding);
+      c = color(255,0,0,255 - newMillis);
     }
     return;
   }
