@@ -1,136 +1,109 @@
-int ntargets = 15;
-Target[] targets = new Target[ntargets];
-int TargetRadius = 20;
-float ExplodingTime = 3;  // number of seconds of darkening rec color, then DEAD
-int BallRadius = 15;
-int MaxVel = 3;  // maximum velocity in + or - in x or y direction
-
-// the target's states:
-int ALIVE = 0;
-int EXPLODING = 1;
-int DEAD = 2;
-
-// Player's ball parameters
-int bx,by,bxvel,byvel;
+int px, py, psize;
+int pxvel, pyvel;
+Target[] targets = new Target[20];
+Bullet[] bullets = new Bullet[100];
+int bulletNum = 0;
 
 void setup() {
-   size(600,600);
-   background(0);
-   for(int i = 0; i < ntargets; ++i)
-     targets[i] = new Target();
-   bx = width/2;
-   by = height/2;
-   bxvel = 0;
-   byvel = 0;
-   stroke(255);  // white border around targets
+  for (int i = 0; i < targets.length; i++) {
+    targets[i] = new Target((int)random(600), (int)random(200), (int)random(1,30));
+  }
+  background(0);
+  size(600,600);
+  px = 400;
+  py = 600;
+  psize = 40;
 }
 
 void draw() {
+  fill(255);
   background(0);
-  stroke(255);
-  for (int i = 0; i < ntargets; ++i) {
-    targets[i].display();
-  }
-
-  // move the player's ball
-  bx += bxvel;
-  by += byvel;
-  fill(255,255,255);
-  circle(bx,by,BallRadius * 2);
-  stroke(0);
-  line(bx - BallRadius, by, bx + BallRadius, by);
-  line(bx, by - BallRadius, bx, by + BallRadius);
-  if (bx <= BallRadius || bx >= (width-BallRadius)) {
-      bxvel = 0;
-  }
-  if (by <= BallRadius || by >= (height-BallRadius)) {
-    byvel = 0;
-  }
-  if (gameFinished()) {
-    setup();
-  }
-  
-  
-}
-
-boolean gameFinished() {
+  circle(px,py,psize);
+  px += pxvel;
+  py += pyvel;
   for (Target i : targets) {
-    if (i.state != 2) {
-      return false;
+    for (int b = 0; b < bulletNum; b++) {
+      if (touching(i.x, i.y, i.size, bullets[b].bx, bullets[b].by, bullets[b].bsize)) {
+        i.state = 1;
+        i.c = color(255, 0, 0);
+        i.startedExploding = millis();
+      }
     }
   }
-  return true;
 }
-
-/* ===================
- keyPressed:
- Change the speeds of the player ball with keystrokes as follows
- But make sure that MaxVel is not exceeded in any direction
-   'w' : y speed - 1
-   'a' : x speed - 1
-   's' : y speed + 1
-   'd' : x speed + 1
- =================== */
 
 void keyPressed() {
-  if (key == 'w' && byvel > -3) {
-    byvel -= 1;
+  if (key == ' ') {
+    bullets[bulletNum] = new Bullet(px, py);
+    bulletNum++;
   }
-  if (key == 's' && byvel < 3) {
-    byvel += 1;
+  if (key == 'w') {
+    pyvel -= 1;
   }
-  if (key == 'a' && bxvel > -3) {
-    bxvel -= 1;
+  if (key == 's') {
+    pyvel += 1;
   }
-  if (key == 'd' && bxvel < 3) {
-    bxvel += 1;
+  if (key == 'a') {
+    pxvel -= 1;
   }
-  if (keyCode == ENTER) {
-    setup();
+  if (key == 'd') {
+    pxvel += 1;
   }
 }
 
+public boolean touching(int x, int y, int size, int bx, int by, int bsize) {
+  return dist(x, y, bx, by) < size + bsize;
+}
+
+class Bullet {
+  int bx, by, bsize;
+
+  public Bullet(int x, int y) {
+    bx = x;
+    by = y;
+    bsize = 10;
+  }
+  public void display() {
+    fill(0,0,255);
+    circle(bx,by,bsize);
+    by -= 10;
+  }
+}
 
 class Target {
-  int cx, cy;
-  int startedExploding;  // in milliseconds (use millis())
+  int x, y, size;
   int state;
-  color c;
-  
-  Target() {
-    cx = (int)random(width);
-    cy = (int)random(height);
-    c = color(random(255),random(255),random(255));
+  int velx, vely;
+  int c;
+  int startedExploding;
+
+  public Target(int x, int y, int size) {
+    this.x = x;
+    this.y = y;
+    this.size = size;
     state = 0;
+    velx = 1;
+    vely = 1;
+    c = color(255, 255, 255);
   }
-  
-  void display() {
-    fill(c);
+  public void display() {
+    fill(255,0,0);
     if (state == 0) {
-      stroke(255,255,255);
-      circle(cx,cy,TargetRadius * 2);
-      if (touching()) {
-        startedExploding = millis();
-        state = 1;
-        c = color(255,0,0);
-      }
+      circle(x, y, size);
+      x += velx;
+      y += vely;
+      velx = -velx;
+      vely = -vely;
     } else if (state == 1) {
       fill(c);
-      circle(cx,cy,TargetRadius * 2);
+      circle(x, y, size * 2);
       float newMillis = (millis() - startedExploding) * 255 / 3000;
       if (newMillis >= 255) {
         noStroke();
-        circle(cx,cy,TargetRadius * 2);
+        circle(x, y, size * 2);
         state = 2;
       }
-      c = color(255,0,0,255 - newMillis);
+      c = color(255, 0, 0, 255 - newMillis);
     }
-    return;
-  }
-  boolean touching() {
-    if (dist(cx,cy,bx,by) < BallRadius + TargetRadius) {
-      return true;
-    }
-    return false;
   }
 }
