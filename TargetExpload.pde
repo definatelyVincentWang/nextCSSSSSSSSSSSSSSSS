@@ -106,8 +106,8 @@ class Target {
   
   void display() {
     fill(c);
-    noStroke();
     if (state == 0) {
+      stroke(255,255,255);
       circle(cx,cy,TargetRadius * 2);
       if (touching()) {
         startedExploding = millis();
@@ -117,8 +117,10 @@ class Target {
     } else if (state == 1) {
       fill(c);
       circle(cx,cy,TargetRadius * 2);
-      float newMillis = (millis() - startedExploding) / 3;
+      float newMillis = (millis() - startedExploding) * 255 / 3000;
       if (newMillis >= 255) {
+        noStroke();
+        circle(cx,cy,TargetRadius * 2);
         state = 2;
       }
       c = color(255,0,0,255 - newMillis);
