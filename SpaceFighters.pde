@@ -6,10 +6,10 @@ int bulletNum = 0;
 
 void setup() {
   for (int i = 0; i < targets.length; i++) {
-    targets[i] = new Target((int)random(600), (int)random(200), (int)random(1,30));
+    targets[i] = new Target((int)random(600), (int)random(200), (int)random(10, 30));
   }
   background(0);
-  size(600,600);
+  size(600, 600);
   px = 400;
   py = 560;
   psize = 40;
@@ -18,35 +18,39 @@ void setup() {
 void draw() {
   fill(255);
   background(0);
-  circle(px,py,psize * 2);
+  circle(px, py, psize * 2);
   px += pxvel;
   py += pyvel;
-  
+
   for (Target i : targets) {
     i.display();
   }
   for (int i = 0; i < bulletNum; i++) {
     bullets[i].display();
   }
-  /*
+
   for (int i = 0; i < bulletNum; i++) {
-    if (bullets[i].y < 0) {
-      
+    if (bullets[i].by < 0) {
+      for (int j = i + 1; j < bulletNum; j++) {
+        bullets[j-1] = bullets[j];
+      }
     }
   }
-  */
-  
+
+
   for (Target i : targets) {
-    for (int b = 0; b < bulletNum; b++) {
-      if (touching(i.x, i.y, i.size, bullets[b].bx, bullets[b].by, bullets[b].bsize)) {
-        i.state = 1;
-        i.c = color(255, 0, 0);
-        i.startedExploding = millis();
+    if (i.state == 0) {
+      for (int b = 0; b < bulletNum; b++) {
+        if (touching(i.x, i.y, i.size, bullets[b].bx, bullets[b].by, bullets[b].bsize)) {
+          i.state = 1;
+          i.c = color(255, 0, 0);
+          i.startedExploding = millis();
+        }
       }
     }
   }
   if (px <= psize || px >= (width-psize)) {
-      pxvel = 0;
+    pxvel = 0;
   }
   if (py <= psize || py >= (height-psize)) {
     pyvel = 0;
@@ -85,8 +89,8 @@ class Bullet {
     bsize = 10;
   }
   public void display() {
-    fill(0,0,255);
-    circle(bx,by,bsize);
+    fill(0, 0, 255);
+    circle(bx, by, bsize);
     by -= 10;
   }
 }
@@ -105,7 +109,7 @@ class Target {
     state = 0;
     velx = 1;
     vely = 1;
-    c = color(0,255,0);
+    c = color(0, 255, 0);
   }
   public void display() {
     fill(c);
