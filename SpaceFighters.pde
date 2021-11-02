@@ -21,6 +21,21 @@ void draw() {
   circle(px,py,psize * 2);
   px += pxvel;
   py += pyvel;
+  
+  for (Target i : targets) {
+    i.display();
+  }
+  for (int i = 0; i < bulletNum; i++) {
+    bullets[i].display();
+  }
+  /*
+  for (int i = 0; i < bulletNum; i++) {
+    if (bullets[i].y < 0) {
+      
+    }
+  }
+  */
+  
   for (Target i : targets) {
     for (int b = 0; b < bulletNum; b++) {
       if (touching(i.x, i.y, i.size, bullets[b].bx, bullets[b].by, bullets[b].bsize)) {
