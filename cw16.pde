@@ -43,7 +43,10 @@ class Box {
   }
   // the intersects method takes a Ball argument and returns a boolean: true if this Box intersects the given Ball, else false
   boolean intersects(Ball b) {
-    boolean specialCase = dist(x + w / 2, y + h / 2, b.x,b.y) < b.radius + dist(x,y,x + w/2, y + h/2);
+    float centerX = x + w / 2;
+    float centerY = y + h / 2;
+    float halfDiagonal = dist(x,y, centerX, centerY);
+    boolean specialCase = dist(centerX, centerY, b.x,b.y) < b.radius + halfDiagonal;
     boolean xTrue = b.x - b.radius <= x + w && b.x + b.radius >= x;
     boolean yTrue = b.y - b.radius <= y + h && b.y + b.radius >= y;
     return specialCase && xTrue && yTrue;
