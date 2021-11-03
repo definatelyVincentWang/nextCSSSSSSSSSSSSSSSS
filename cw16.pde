@@ -43,9 +43,10 @@ class Box {
   }
   // the intersects method takes a Ball argument and returns a boolean: true if this Box intersects the given Ball, else false
   boolean intersects(Ball b) {
+    boolean specialCase = dist(x + w / 2, y + h / 2, b.x,b.y) < b.radius + dist(x,y,x + w/2, y + h/2);
     boolean xTrue = b.x - b.radius <= x + w && b.x + b.radius >= x;
     boolean yTrue = b.y - b.radius <= y + h && b.y + b.radius >= y;
-    return xTrue && yTrue;
+    return specialCase && xTrue && yTrue;
   }
 }
 
@@ -54,22 +55,25 @@ Ball ball;
 
 void setup() {
   size(400,400);
-  box = new Box(200,200,50,50);
-  ball = new Ball(200,200,50);
+  box = new Box(100,100,200,100);
+  //ball = new Ball(350,150,12.5); // -> returns false
+  //ball = new Ball(320, 150, 32.5); // -> returns true
+  //ball = new Ball(265, 125, 25); // -> returns true
+  //ball = new Ball(90, 90, 25); // -> returns true
+  ball = new Ball(80, 80, 25); // -> returns false
   box.draw();
   ball.draw();
-  ball.draw(200,100);
+  //ball.draw(200,100);
   println(box.intersects(ball));
 }
 
-
+/*
 void draw() {
   background(0);
   box.draw();
   ball.draw();
   println(box.intersects(ball));
 }
-
 
 void keyPressed() {
   if (key == 'w') {
@@ -85,3 +89,4 @@ void keyPressed() {
     ball.x += 10;
   }
 }
+*/
