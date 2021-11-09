@@ -17,6 +17,7 @@ class Palette {
     return intersectX && intersectY;
   }
   void display() {
+    stroke(c);
     fill(c);
     square(x,y,side);
   }
@@ -25,8 +26,11 @@ class Palette {
 Palette[] boxes;
 float prevX, prevY;
 int prevFrame;
+color s;
 
 void setup() {
+  s = color(255);
+  strokeWeight(2);
   size(1200,900);
   String[] colorStrings = {"R","G","B","RG","Rg","RB","Rb","rG","GB","Gb","rB","gB",""};
   boxes = new Palette[colorStrings.length];
@@ -43,9 +47,10 @@ void draw() {
   for (Palette box : boxes) {
     box.display();
     if (box.checkIntersect() && mousePressed) {
-      stroke(box.c);
+      s = box.c;
     }
   }
+  stroke(s);
   if (mousePressed) {
     if (frameCount == prevFrame + 1) {
       line(prevX,prevY,mouseX,mouseY);
@@ -61,7 +66,7 @@ void keyPressed() {
     setup();
   }
 }
-
+  
 color convertColors(String c) {
   int[] res = new int[3];
   for (int i = 0; i < c.length(); i++) {
