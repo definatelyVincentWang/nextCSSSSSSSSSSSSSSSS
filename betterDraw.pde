@@ -24,12 +24,14 @@ class Palette {
 }
 
 Palette[] boxes;
+color s;
+
 float prevX, prevY;
 int prevFrame;
-color s;
 
 void setup() {
   s = color(255);
+  background(200);
   strokeWeight(2);
   size(1200,900);
   String[] colorStrings = {"R","G","B","RG","Rg","RB","Rb","rG","GB","Gb","rB","gB",""};
@@ -81,7 +83,7 @@ color convertColors(String c) {
       pos = 2;
     }
     // 90 is the ascii value of Z
-    if (curColor > 90) {
+    if (curColor > 'Z') {
       res[pos] += 180;
     } else {
       res[pos] += 255;
