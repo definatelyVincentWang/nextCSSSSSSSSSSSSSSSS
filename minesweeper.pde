@@ -1,12 +1,13 @@
 class Tile {
-  float x, y;
+  int px,py;
   float w;
   int bombs;
   float state;
 
-  public Tile(float x, float y, float w, int bombs) {
-    this.x = x;
-    this.y = y;
+  public Tile(int px, int py, float w, int bombs) {
+    this.px = px;
+    this.py = py;
+    
     this.w = w;
     this.state = 0;
     this.bombs = bombs;
@@ -23,28 +24,40 @@ class Tile {
     state = 2;
   }
 
-  public void clicked(int posX, int posY) {
+  private int[][] makeStates() {
+    // create a template for the numbers in the tiles
+    int[][] states = new int[totTiles][totTiles];
+    for (int numBomb = 0; numBomb < totBombs; numBomb++) {
+      int bombx = (int)random(states.length);
+      int bomby = (int)random(states[0].length);
+      states[bombx][bomby] = -1;
+      while ((bombx == px && bomby == py) || checkBombs(px, py, states) != 0) {
+        states[bombx][bomby] = 0;
+        bombx = (int)random(states.length);
+        bomby = (int)random(states[0].length);
+        states[bombx][bomby] = -1;
+      }
+    }
+    return states;
+  }
+  /*
+  When mouse button is released, mouseButton is not reset immediately, and will take ~3/20 seconds to reset. Therefore,
+  the draw function may be called multiple times while the mouseButton is not zero.
+  */
+  public void clicked() {
+    float x = px * width / totTiles;
+    float y = py * height / totTiles;
     boolean meetingX = mouseX > x && mouseX < x + w;
     boolean meetingY = mouseY > y && mouseY < y + w;
     if (mousePressed && meetingX && meetingY) {
-      if (mouseButton == RIGHT && tiles[posX][posY].state != 2) {
+      if (mouseButton == RIGHT && tiles[px][py].state != 2) {
         flagged();
-      } else if (tiles[posX][posY].state != 1) {
+        mouseButton = 0;
+        mousePressed = false;
+      } else if (tiles[px][py].state != 1) {
         if (firstClick) {
           firstClick = false;
-          // create a template for the numbers in the tiles
-          int[][] states = new int[totTiles][totTiles];
-          for (int numBomb = 0; numBomb < totBombs; numBomb++) {
-            int x = (int)random(states.length);
-            int y = (int)random(states.length);
-            states[x][y] = -1;
-            while ((x == posX && y == posY) || checkBombs(posX, posY, states) != 0) {
-              states[x][y] = 0;
-              x = (int)random(states.length);
-              y = (int)random(states.length);
-              states[x][y] = -1;
-            }
-          }
+          int[][] states = makeStates();
           for (int stateX = 0; stateX < states.length; stateX++) {
             for (int stateY = 0; stateY < states[0].length; stateY++) {
               if (states[stateX][stateY] == -1) {
@@ -53,20 +66,24 @@ class Tile {
               states[stateX][stateY] = checkBombs(stateX, stateY, states);
             }
           }
-          for (int x = 0; x < tiles.length; x++) {
-            for (int y = 0; y < tiles[0].length; y++) {
-              tiles[x][y].bombs = states[x][y];
+          for (int statex = 0; statex < tiles.length; statex++) {
+            for (int statey = 0; statey < tiles[0].length; statey++) {
+              tiles[statex][statey].bombs = states[statex][statey];
             }
           }
         }
         displayed();
         boolean[][] seen = new boolean[totTiles][totTiles];
-        reveal(posX, posY, seen);
+        reveal(px, py, seen);
+        mouseButton = 0;
+        mousePressed = false;
       }
     }
   }
 
   public void display() {
+    float x = px * width / totTiles;
+    float y = py * height / totTiles;
     fill(255);
     square(x, y, w);
     fill(0);
@@ -92,7 +109,7 @@ class Tile {
 }
 
 Tile[][] tiles;
-color[] colors = new color[]{color(255), color(0, 0, 255), color(0, 255, 0), color(255, 255, 0), color(160, 32, 240), color(255, 0, 0), color(255, 183, 197), color(100), color(200)};
+color[] colors = new color[]{color(255), color(0, 0, 255), color(0, 255, 0), color(255, 255, 0), color(160, 32, 240), color(255, 183, 197), color(255), color(100), color(200)};
 boolean dead;
 boolean firstClick;
 int totTiles;
@@ -101,6 +118,7 @@ String username;
 boolean won;
 String difficulty;
 String time;
+int debug = 0;
 
 void setup() {
   firstClick = true;
@@ -140,10 +158,8 @@ void setup() {
   // initialize the tiles
   tiles = new Tile[totTiles][totTiles];
   for (int x = 0; x < tiles.length; x++) {
-    int posX = (int)x * (width / totTiles);
     for (int y = 0; y < tiles[0].length; y++) {
-      int posY = (int)y * (height / totTiles);
-      tiles[x][y] = new Tile(posX, posY, width / totTiles, 0);
+      tiles[x][y] = new Tile(x, y, width / totTiles, 0);
     }
   }
 
@@ -181,7 +197,6 @@ void setup() {
     brcSetMonitor("pbi","No Personal Best on Record");
   }
 }
-
 void draw() {
   if (won) {
     brc();
@@ -227,21 +242,21 @@ void draw() {
   int tilesFound = 0;
   for (int posX = 0; posX < tiles.length; posX++) {
     for (int posY = 0; posY < tiles.length; posY++) {
-      tiles[posX][posY].display();
-      tiles[posX][posY].clicked(posX, posY);
+      tiles[posX][posY].clicked();
       if (tiles[posX][posY].state == 1) {
         numFlagged++;
       }
       if (tiles[posX][posY].state == 2) {
         tilesFound++;
       }
+      tiles[posX][posY].display();
     }
   }
   brcSetMonitor("mines", numFlagged);
   
   if (tilesFound == totTiles * totTiles - totBombs) {
     PFont font = createFont("arial", 50);
-  textFont(font);
+    textFont(font);
     background(200);
     text("Congradulations " + username + "for beating a " + difficulty + "minesweeper game. ",200,200);
     text("Time to beat: " + time, 200,300);
