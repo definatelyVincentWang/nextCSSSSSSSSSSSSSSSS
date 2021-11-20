@@ -93,8 +93,8 @@ class Tile {
 
 Tile[][] tiles;
 color[] colors = new color[]{color(255), color(0, 0, 255), color(0, 255, 0), color(255, 255, 0), color(160, 32, 240), color(255, 0, 0), color(255, 183, 197), color(100), color(200)};
-boolean dead = false;
-boolean firstClick = true;
+boolean dead;
+boolean firstClick;
 int totTiles;
 int totBombs;
 String username;
@@ -103,6 +103,11 @@ String difficulty;
 String time;
 
 void setup() {
+  firstClick = true;
+  dead = false;
+  username = "";
+  won = false;
+  frameCount = 0;
   size(1000, 1000);
   background(200);
 
@@ -197,8 +202,8 @@ void draw() {
   int hours = (int)(frameCount / 60) / 60 / 60;
   int minutes = (int)(frameCount / 60) / 60 % 60;
   int seconds = (int)(frameCount / 60) / 60 / 60 % 60;
-  time = minutes + ":" + seconds;
-  brcSetMontitor("time", time);
+  time = hours + ":" + minutes + ":" + seconds;
+  brcSetMonitor("time", time);
 
   if (dead) {
     for (int px = 0; px < tiles.length; px++) {
