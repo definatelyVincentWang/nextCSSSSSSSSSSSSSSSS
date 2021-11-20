@@ -23,7 +23,7 @@ class Tile {
     state = 2;
   }
 
-  public void clicked(boolean flagging, int posX, int posY) {
+  public void clicked(int posX, int posY) {
     boolean meetingX = mouseX > x && mouseX < x + w;
     boolean meetingY = mouseY > y && mouseY < y + w;
     if (mousePressed && meetingX && meetingY) {
@@ -37,13 +37,13 @@ class Tile {
           for (int numBomb = 0; numBomb < totBombs; numBomb++) {
             int x = (int)random(states.length);
             int y = (int)random(states.length);
-            while (x == posX) {
-              x = (int)random(states.length);
-            }
-            while (y == posY) {
-              y = (int)random(states.length);
-            }
             states[x][y] = -1;
+            while ((x == posX && y == posY) || checkBombs(posX, posY, states) != 0) {
+              states[x][y] = 0;
+              x = (int)random(states.length);
+              y = (int)random(states.length);
+              states[x][y] = -1;
+            }
           }
           for (int stateX = 0; stateX < states.length; stateX++) {
             for (int stateY = 0; stateY < states[0].length; stateY++) {
@@ -97,13 +97,39 @@ boolean dead = false;
 boolean firstClick = true;
 int totTiles;
 int totBombs;
+String username;
+boolean won;
+String difficulty;
+String time;
 
 void setup() {
   size(1000, 1000);
+  background(200);
 
   // outside parameters
-  totTiles = 20;
-  totBombs = 150;
+  brc();
+
+  if (brcValue("difficulty").equals("E")) {
+    totTiles = 9;
+    totBombs = 10;
+    difficulty = "Easy";
+  } else if (brcValue("difficulty").equals("M")) {
+    totTiles = 16;
+    totBombs = 40;
+    difficulty = "Medium";
+  } else if (brcValue("difficulty").equals("H")) {
+    totTiles = 20;
+    totBombs = 150;
+    difficulty = "Hard";
+  } else if (brcValue("difficulty").equals("I")) {
+    totTiles = 30;
+    totBombs = 400;
+    difficulty = "Insane";
+  } else {
+    totTiles = int(brcValue("size"));
+    totBombs = int(brcValue("mines"));
+    difficulty = "Custom";
+  }
 
 
   // initialize the tiles
@@ -120,16 +146,59 @@ void setup() {
   PFont font = createFont("arial", width / totTiles);
   textFont(font);
   textAlign(CENTER);
+  
+  String[] easyLeaderboard = loadStrings("Easy.txt");
+  String[] mediumLeaderboard = loadStrings("Medium.txt");
+  String[] hardLeaderboard = loadStrings("Hard.txt");
+  String[] insaneLeaderboard = loadStrings("Insane.txt");
+  if (easyLeaderboard.length > 0) {
+    brcSetMonitor("pbe",easyLeaderboard[0]);
+  }
+  if (easyLeaderboard.length == 0) {
+    brcSetMonitor("pbe","No Personal Best on Record");
+  }
+  if (mediumLeaderboard.length > 0) {
+    brcSetMonitor("pbm",mediumLeaderboard[0]);
+  }
+  if (mediumLeaderboard.length == 0) {
+    brcSetMonitor("pbm","No Personal Best on Record");
+  }
+  if (hardLeaderboard.length > 0) {
+    brcSetMonitor("pbh",hardLeaderboard[0]);
+  }
+  if (hardLeaderboard.length == 0) {
+    brcSetMonitor("pbh","No Personal Best on Record");
+  }
+  if (insaneLeaderboard.length > 0) {
+    brcSetMonitor("pbi",insaneLeaderboard[0]);
+  }
+  if (insaneLeaderboard.length == 0) {
+    brcSetMonitor("pbi","No Personal Best on Record");
+  }
 }
 
 void draw() {
-  /*
+  if (won) {
+    brc();
+    String changed = brcChanged();
+    if (changed.equals("restart")) {
+      setup();
+    }
+    return;
+  }
+  if (username.length() == 0) {
+    username = brcValue("username");
+  }
   brc();
-   String changed = brcChanged();
-   if (changed.equals()) {
-   
-   }
-   */
+  String changed = brcChanged();
+  if (changed.equals("restart")) {
+    setup();
+  }
+  int hours = (int)(frameCount / 60) / 60 / 60;
+  int minutes = (int)(frameCount / 60) / 60 % 60;
+  int seconds = (int)(frameCount / 60) / 60 / 60 % 60;
+  time = minutes + ":" + seconds;
+  brcSetMontitor("time", time);
 
   if (dead) {
     for (int px = 0; px < tiles.length; px++) {
@@ -146,15 +215,53 @@ void draw() {
   if (reset) {
     setup();
   }
-
+  int numFlagged = 0;
   // flagging is an outside variable
   boolean flagging = false;
+  
+  int tilesFound = 0;
   for (int posX = 0; posX < tiles.length; posX++) {
     for (int posY = 0; posY < tiles.length; posY++) {
       tiles[posX][posY].display();
-      tiles[posX][posY].clicked(flagging, posX, posY);
+      tiles[posX][posY].clicked(posX, posY);
+      if (tiles[posX][posY].state == 1) {
+        numFlagged++;
+      }
+      if (tiles[posX][posY].state == 2) {
+        tilesFound++;
+      }
     }
   }
+  brcSetMonitor("mines", numFlagged);
+  
+  if (tilesFound == totTiles * totTiles - totBombs) {
+    PFont font = createFont("arial", 50);
+  textFont(font);
+    background(200);
+    text("Congradulations " + username + "for beating a " + difficulty + "minesweeper game. ",200,200);
+    text("Time to beat: " + time, 200,300);
+    boolean place = checkNewRecord(time);
+    if (place) {
+      text("New Record for " + difficulty + " difficulty.", 200,400);
+    }
+  }
+}
+
+boolean checkNewRecord(String time) {
+  String[] ar = loadStrings(difficulty + ".txt");
+  PrintWriter output = createWriter(difficulty + ".txt");
+  String[] newAr = new String[1];
+  if (time.compareTo(ar[0]) < 0) {
+    newAr[0] = time;
+    output.println(newAr[0]);
+    output.flush();
+    output.close();
+    return true;
+  }
+  output.println(ar[0]);
+  output.flush();
+  output.close();
+  return false;
 }
 
 public void reveal(int posX, int posY, boolean[][] seen) {
