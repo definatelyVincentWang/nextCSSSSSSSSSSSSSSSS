@@ -14,9 +14,9 @@ class ArrayList {
     length = 0;
   }
   
-  public int get(Object i) {
+  public int get(Object j) {
     for (int i = 0; i < array.length; i++) {
-      if (array[i].equals(i)) {
+      if (array[i].equals(j)) {
         return i;
       }
     }
