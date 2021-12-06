@@ -1,7 +1,3 @@
-void setup() {
-
-}
-
 void SelectionSort(int[] array) {
    for (int i = 0; i < array.length; i++) {
       int pos = i + 1;
